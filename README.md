@@ -5,7 +5,7 @@ Anton Belyy and Alexandra DeLucia
 
 ---
 
-# Resources
+## Resources
 
 * [Project pitch](https://docs.google.com/presentation/d/1XTD959E-yOY7JGGeNWxJT_Wyk2BqKlH1VqVMmWLnY34/edit?usp=sharing)
 * [Formal proposal](https://www.overleaf.com/read/dhntvgzgfctc)
