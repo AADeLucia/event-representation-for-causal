@@ -1,0 +1,3 @@
+fly plane:Q197 0
+crash plane:Q197 0
+pilot:Q2095549 crash 1

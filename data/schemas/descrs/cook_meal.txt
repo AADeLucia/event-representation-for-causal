@@ -1,0 +1,5 @@
+find tools:Q3773693 0
+get ingredients:Q10675206 0
+cook meal:Q6460735 0
+eat meal:Q6460735 0
+wash tools:Q3773693 0

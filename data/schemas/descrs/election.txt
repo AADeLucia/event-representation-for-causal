@@ -1,0 +1,6 @@
+donate campaign:Q11642595 0
+run election:Q40231 0
+cast ballot:Q905151 0
+cast vote:Q42904171 0
+elect candidate:Q618536 0
+appoint candidate:Q618536 0

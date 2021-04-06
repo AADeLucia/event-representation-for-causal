@@ -1,0 +1,5 @@
+plan coup:Q45382 0
+organize coup:Q45382 0
+overthrow regime:Q5589178 0
+remove leader:Q2285706 0
+install leader:Q2285706 0

@@ -1,0 +1,4 @@
+disease:Q12136 spread 1
+organize quarantine:Q182899 0
+develop treatment:Q179661 0
+provide treatment:Q179661 0

@@ -1,0 +1,4 @@
+organize protest:Q175331 0
+obtain permit:Q3312801 0
+deliver speech:Q861911 0
+hold display:Q2449538 0
