@@ -1,7 +1,11 @@
 # Custom
 data/cgw
 temporal
+sid_temporal_output
 test
+demo_lome
+logs
+*.dev
 
 ###############
 # Byte-compiled / optimized / DLL files
