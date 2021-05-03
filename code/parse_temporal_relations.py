@@ -1,5 +1,5 @@
 """
-Parse raw timeline/predictions from LOME temporal output (Concrete .tar.gz)
+Parse temporal relations from LOME temporal output (Concrete .tar.gz)
 
 Output is single JSONL with a single entry for each Gigaword document of form
 
@@ -18,10 +18,11 @@ import logging
 import tarfile
 from collections import Counter
 import re
+import json
 
 from concrete.util import CommunicationReader
 from concrete.communication.ttypes import Communication
-from typing import Dict
+from typing import Dict, Iterable
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
@@ -34,6 +35,7 @@ def parse_args():
     parser.add_argument("--output-file", type=str, help="Path to save .jsonl")
     parser.add_argument("--aggregate", action="store_true", help="Aggregate counts from outputted .jsonl. Uses --output-file as input")
     parser.add_argument("--aggregation-output-file", type=str, help="Text file with arg0, arg1, kind, counts separated by tabs")
+    parser.add_argument("--key-verbs", type=str, help="JSON file with important PredPatt verbs to limit relations")
     parser.add_argument('--debug', action='store_true')
     parser.add_argument("--log-file", help="Path to log")
     return parser.parse_args()
@@ -45,9 +47,6 @@ def aggregate_relations(input_file, output_file):
     with jsonlines.open(input_file) as reader:
         for obj in reader:
             for (kind, arg0, arg1) in obj["relations"]:
-                if kind in {"contained", "container"}:
-                    continue
-
                 # Store in alphabetical order
                 arg0 = punct.sub("", arg0)
                 arg1 = punct.sub("", arg1)
@@ -62,7 +61,7 @@ def aggregate_relations(input_file, output_file):
             a = f.write(f"{rel[0]}\t{rel[1]}\t{rel[2]}\t{count}\n")
 
 
-def get_temporal_relations(comm: Communication):
+def get_temporal_relations(comm: Communication, key_verbs: Iterable = None):
     """
     Get before/after/contained/container temporal relations from text
     """
@@ -73,19 +72,27 @@ def get_temporal_relations(comm: Communication):
     # 2. Get temporal relations
     # sm.confidence was always None so I took it out
     # situationKind is one of "after", "before", "contained", "container"
+    # Do not save sm.argumentList[0].role or sm.argumentList[1].role because it is always ARG0/ARG1
     def extract_relation(sm):
-        return (sm.situationKind,
-                # sm.argumentList[0].role,  # always ARG0
-                # sm.argumentList[1].role,
+        rel = (sm.situationKind,
                 spans_by_id.get(sm.argumentList[0].situationMentionId.uuidString),
                 spans_by_id.get(sm.argumentList[1].situationMentionId.uuidString)
-                )
+            )
+        # Skip contained/container
+        if rel[0] not in {"before", "after"}:
+            return
+        # Skip tokens not in key verbs
+        if key_verbs:
+            if rel[1] in key_verbs or rel[2] in key_verbs:
+                return rel
+            else:
+                return
     try:
         relations = map(extract_relation, comm.situationMentionSetList[1].mentionList)
     except IndexError as err:
         logger.error(f"Error encountered. Returning [] relations.\n{err}")
         return []
-    return relations
+    return [r for r in relations if r is not None]
 
 
 if __name__ == "__main__":
@@ -97,8 +104,8 @@ if __name__ == "__main__":
         logger.addHandler(logging.FileHandler(args.log_file))
 
     if args.aggregate:
-        logger.info(f"In aggregation mode. Writing to {args.aggregate_output_file}")
-        aggregate_relations(args.output_file, args.aggregate_output_file)
+        logger.info(f"In aggregation mode. Writing to {args.aggregation_output_file}")
+        aggregate_relations(args.output_file, args.aggregation_output_file)
         logger.info("Done")
         exit(0)
 
@@ -106,11 +113,20 @@ if __name__ == "__main__":
         num_comms = sum(1 for comm in archive if comm.isfile())
         logger.debug(f"{num_comms:,} Communications in {args.input_file}")
 
+    key_verbs = None
+    if args.key_verbs:
+        try:
+            with open(args.key_verbs, "r") as f:
+                key_verbs = json.load(f)
+                key_verbs = set(key_verbs['predpatt'])
+        except json.decoder.JSONDecodeError as err:
+            logger.error(f"Issue reading {args.key_verbs}:\n{err}")
+
     writer = jsonlines.open(args.output_file, "a")
     for comm, filename in tqdm(CommunicationReader(args.input_file), total=num_comms):
         rel = {
             "filename": filename,
-            "relations": list(get_temporal_relations(comm))
+            "relations": get_temporal_relations(comm, key_verbs)
         }
         writer.write(rel)
 

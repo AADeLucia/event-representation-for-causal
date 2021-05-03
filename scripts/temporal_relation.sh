@@ -1,24 +1,33 @@
 #!/bin/sh
 
-for dir in "protests" "election" "arrest" "disease_outbreak" "plane_crash"
+# "protests" "election" "arrest"  "disease_outbreak" "plane_crash"
+for dir in "plane_crash"
 do
 
   DIR="${EVENT_HOME}/results/${dir}"
   INPUT="${DIR}/nyt_comms.tar.gz"
   OUTPUT="${DIR}/temporal_relations.jsonl"
   AGG_OUTPUT="${DIR}/temporal_relations_agg.txt"
+  VERBS="${DIR}/key_verbs.json"
 
   python "${EVENT_HOME}/code/parse_temporal_relations.py" \
     --input-file "${INPUT}" \
     --output-file "${OUTPUT}" \
-    --debug
+    --key-verbs "${VERBS}" \
+
+  status=$?
+  if [ $status -neq 0 ]
+  then
+    echo "Task failed"
+    exit 1
+  fi
 
   python "${EVENT_HOME}/code/parse_temporal_relations.py" \
     --input-file "${INPUT}" \
     --output-file "${OUTPUT}" \
+    --key-verbs "${VERBS}" \
     --aggregate \
-    --aggregate-output-file "${AGG_OUTPUT}" \
-    --debug
+    --aggregation-output-file "${AGG_OUTPUT}" \
 
 done
 echo "Done"
