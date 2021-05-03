@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # "protests" "election" "arrest"  "disease_outbreak" "plane_crash"
-for dir in "plane_crash"
+for dir in "election"
 do
 
   DIR="${EVENT_HOME}/results/${dir}"
@@ -10,13 +10,14 @@ do
   AGG_OUTPUT="${DIR}/temporal_relations_agg.txt"
   VERBS="${DIR}/key_verbs.json"
 
+  rm "${OUTPUT}"
   python "${EVENT_HOME}/code/parse_temporal_relations.py" \
     --input-file "${INPUT}" \
     --output-file "${OUTPUT}" \
     --key-verbs "${VERBS}" \
 
   status=$?
-  if [ $status -neq 0 ]
+  if [ $status -ne 0 ]
   then
     echo "Task failed"
     exit 1

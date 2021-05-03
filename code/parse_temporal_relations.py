@@ -19,6 +19,9 @@ import tarfile
 from collections import Counter
 import re
 import json
+import nltk
+nltk.download('wordnet')
+from nltk.stem import WordNetLemmatizer
 
 from concrete.util import CommunicationReader
 from concrete.communication.ttypes import Communication
@@ -26,6 +29,8 @@ from typing import Dict, Iterable
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
+
+lemmatizer = WordNetLemmatizer()
 
 
 def parse_args():
@@ -42,10 +47,10 @@ def parse_args():
 
 
 def aggregate_relations(input_file, output_file):
-    punct = re.compile("[.,!?]")
+    punct = re.compile("[.,!?'`;()]")
     argument_counter = Counter()
     with jsonlines.open(input_file) as reader:
-        for obj in reader:
+        for obj in reader.iter(skip_invalid=True):
             for (kind, arg0, arg1) in obj["relations"]:
                 # Store in alphabetical order
                 arg0 = punct.sub("", arg0)
@@ -70,23 +75,29 @@ def get_temporal_relations(comm: Communication, key_verbs: Iterable = None):
     # logger.debug(f"{span.situationType=} {span.text=} {span.situationKind=} {span.argumentList}")
 
     # 2. Get temporal relations
-    # sm.confidence was always None so I took it out
-    # situationKind is one of "after", "before", "contained", "container"
-    # Do not save sm.argumentList[0].role or sm.argumentList[1].role because it is always ARG0/ARG1
     def extract_relation(sm):
-        rel = (sm.situationKind,
-                spans_by_id.get(sm.argumentList[0].situationMentionId.uuidString),
-                spans_by_id.get(sm.argumentList[1].situationMentionId.uuidString)
-            )
+        """
+        sm.confidence was always None so I took it out
+        situationKind is one of "after", "before", "contained", "container"
+        Do not save sm.argumentList[0].role or sm.argumentList[1].role
+           because it is always ARG0/ARG1
+        """
+        kind = sm.situationKind
+        arg0 = spans_by_id.get(sm.argumentList[0].situationMentionId.uuidString)
+        arg1 = spans_by_id.get(sm.argumentList[1].situationMentionId.uuidString)
+        arg0 = lemmatizer.lemmatize(arg0, pos="v")
+        arg1 = lemmatizer.lemmatize(arg1, pos="v")
+        rel = (kind, arg0, arg1)
         # Skip contained/container
-        if rel[0] not in {"before", "after"}:
+        if kind not in {"before", "after"}:
             return
         # Skip tokens not in key verbs
         if key_verbs:
-            if rel[1] in key_verbs or rel[2] in key_verbs:
+            if arg0 in key_verbs and arg1 in key_verbs:
                 return rel
             else:
                 return
+
     try:
         relations = map(extract_relation, comm.situationMentionSetList[1].mentionList)
     except IndexError as err:
@@ -118,7 +129,8 @@ if __name__ == "__main__":
         try:
             with open(args.key_verbs, "r") as f:
                 key_verbs = json.load(f)
-                key_verbs = set(key_verbs['predpatt'])
+                key_verbs = set([lemmatizer.lemmatize(v, pos="v") for v in key_verbs['predpatt']])
+                logger.debug(f"{key_verbs=}")
         except json.decoder.JSONDecodeError as err:
             logger.error(f"Issue reading {args.key_verbs}:\n{err}")
 
@@ -129,6 +141,8 @@ if __name__ == "__main__":
             "relations": get_temporal_relations(comm, key_verbs)
         }
         writer.write(rel)
+        if args.debug:
+            break
 
     writer.close()
     logger.info("Done")
