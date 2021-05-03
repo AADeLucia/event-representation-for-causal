@@ -1,6 +1,2 @@
-detect crime:Q83267 0
-gather evidence:Q176763 0
-identify suspect:Q224952 0
-issue warrant:Q2477326 0
 police:Q35535 arrest 1
 arrest suspect:Q224952 0

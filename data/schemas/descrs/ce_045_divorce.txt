@@ -1,6 +1,2 @@
 spouse:Q1196129 separate 1
-file divorce:Q93190 0
-hire lawyer:Q40348 0
-complete form:Q1335296 0
-negotiate terms 0
-court:Q41487 rule 1
+couple divorce 1

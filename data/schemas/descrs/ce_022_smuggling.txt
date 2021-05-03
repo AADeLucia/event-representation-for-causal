@@ -1,5 +1,3 @@
 conceal contraband:Q1758553 0
-cross border:Q133346 0
-pass control:Q218719 0
 smuggle contraband:Q1758553 0
 sell contraband:Q1758553 0

@@ -1,0 +1,5 @@
+{
+    'core_events': ['crash_plane_0', 'crash_airplane_0', 'crash_aircraft_0', 'plane_crash_1', 'airplane_crash_1', 'aircraft_crash_1', 'pilot_crash_1'],
+    'predpatt': ['fly', 'land', 'crash', 'hijack', 'explode', 'plunge', 'survive', 'die', 'ground', 'board'],
+    'framenet': [],
+}
