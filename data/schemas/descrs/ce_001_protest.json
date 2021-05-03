@@ -1,5 +1,5 @@
 {
-    'core_events': ['protester_march_1', 'organize_protest_0'],
-    'predpatt': ['organize', 'plan', 'march', 'protest', 'arrest', 'gather', 'demand', 'criticize', 'demonstrate', 'flee'],
-    'framenet': [],
+    "core_events": ["protester_march_1", "organize_protest_0"],
+    "predpatt": ["organize", "plan", "march", "protest", "arrest", "gather", "demand", "criticize", "demonstrate", "flee"],
+    "framenet": [],
 }

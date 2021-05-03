@@ -1,5 +1,5 @@
 {
-    'core_events': ['run_election_0', 'voter_vote_1', 'elect_candidate_0'],
-    'predpatt': ['vote', 'elect', 'campaign', 'nominate', 'endorse', 'defeat', 'oust', 'congratulate', 'outnumber', 'concede'],
-    'framenet': [],
+    "core_events": ["run_election_0", "voter_vote_1", "elect_candidate_0"],
+    "predpatt": ["vote", "elect", "campaign", "nominate", "endorse", "defeat", "oust", "congratulate", "outnumber", "concede"],
+    "framenet": [],
 }

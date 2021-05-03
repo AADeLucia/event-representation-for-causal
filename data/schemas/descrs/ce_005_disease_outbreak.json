@@ -1,5 +1,5 @@
 {
-    'core_events': ['epidemic_start_1', 'disease_spread_1', 'disease_break_1'],
-    'predpatt': ['spread', 'infect', 'diagnose', 'vaccinate', 'transmit', 'cure', 'treat', 'evolve', 'study', 'test'],
-    'framenet': [],
+    "core_events": ["epidemic_start_1", "disease_spread_1", "disease_break_1"],
+    "predpatt": ["spread", "infect", "diagnose", "vaccinate", "transmit", "cure", "treat", "evolve", "study", "test"],
+    "framenet": [],
 }
