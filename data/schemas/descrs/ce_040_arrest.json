@@ -1,5 +1,5 @@
 {
     "core_events": ["police_arrest_1", "arrest_suspect_0"],
     "predpatt": ["convict", "face", "sentence", "arrest", "accuse", "plead", "acquit", "indict", "testify", "charge"],
-    "framenet": ["Verdict", "Sentencing", "Confronting_problem", "Arrest", "Notification_of_charges", "Judgment_communication", "Entering_of_plea", "Evidence"],
+    "framenet": ["Verdict", "Sentencing", "Confronting_problem", "Arrest", "Notification_of_charges", "Judgment_communication", "Entering_of_plea", "Evidence"]
 }
