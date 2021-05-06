@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # "protests" "election" "arrest"  "disease_outbreak" "plane_crash"
-for dir in "election"
+for dir in "plane_crash"
 do
 
   DIR="${EVENT_HOME}/results/${dir}"
-  INPUT="${DIR}/nyt_comms.tar.gz"
+  INPUT="${DIR}/nyt_comms_train.tar.gz"
   OUTPUT="${DIR}/temporal_relations.jsonl"
   AGG_OUTPUT="${DIR}/temporal_relations_agg.txt"
   VERBS="${DIR}/key_verbs.json"
@@ -28,7 +28,8 @@ do
     --output-file "${OUTPUT}" \
     --key-verbs "${VERBS}" \
     --aggregate \
-    --aggregation-output-file "${AGG_OUTPUT}" \
+    --aggregation-output-file "${AGG_OUTPUT}"
 
 done
+
 echo "Done"
