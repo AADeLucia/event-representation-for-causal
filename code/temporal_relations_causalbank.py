@@ -43,12 +43,10 @@ def get_verb_spacy(sentence, key_verbs):
     return set(verbs)
 
 
-def get_verb(sentence, key_verbs):
+def get_verbs(sentence):
+    """Check sentence for verbs and return set of lemmatized verbs"""
     sentence = nltk.word_tokenize(sentence)
-    verbs = []
-    for (token, pos) in nltk.pos_tag(sentence):
-        if pos == "VB" and lemmatizer.lemmatize(token, pos="v") in key_verbs:
-            verbs.append(lemmatizer.lemmatize(token, pos="v"))
+    verbs = [lemmatizer.lemmatize(token, pos="v") for (token, pos) in nltk.pos_tag(sentence) if pos == "VB"]
     return set(verbs)
 
 
@@ -75,20 +73,23 @@ if __name__ == "__main__":
                 # "because" pattern where the effect is followed by the cause
                 separator, effect, cause = line.split("\t")
 
-                for schema, verbs in key_verbs.items():
-                    # Get cause and effect verbs
-                    # Skip sentence if there is no verb in cause part
-                    cause_verbs = get_verb(cause, verbs)
-                    if not cause_verbs:
-                        continue
-                    effect_verbs = get_verb(effect, verbs)
-                    if not effect_verbs:
-                        continue
+                # Get cause and effect verbs
+                # Skip sentence if there is no verb in cause part
+                cause_verbs = get_verbs(cause)
+                if not cause_verbs:
+                    continue
+                effect_verbs = get_verbs(effect)
+                if not effect_verbs:
+                    continue
 
-                    # Get all combinations of cause verbs to effect verbs
-                    combos = [i for i in itertools.product(cause_verbs, effect_verbs)]
-                    logger.debug(f"{combos=}")
-                    causations[schema].update(combos)
+                for schema, verbs in key_verbs.items():
+                    cause_overlap = cause_verbs.intersection(verbs)
+                    effect_overlap = effect_verbs.intersection(verbs)
+                    if cause_overlap and effect_overlap:
+                        # Get all combinations of cause verbs to effect verbs
+                        combos = [i for i in itertools.product(cause_verbs, effect_verbs)]
+                        logger.debug(f"{combos=}")
+                        causations[schema].update(combos)
 
         if args.debug:
             break

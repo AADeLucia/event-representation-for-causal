@@ -1,6 +1,7 @@
 #!/bin/bash
 
-  INPUT_FILES=("/srv/local1/share/datasets/causalbank/because_mode/caused_by" "/srv/local1/share/datasets/causalbank/because_mode/because")
+  # "/srv/local1/share/datasets/causalbank/because_mode/caused_by"
+  INPUT_FILES=("/srv/local1/share/datasets/causalbank/because_mode/because")
   OUTPUT="${EVENT_HOME}/results/causalbank_relations.txt"
   VERBS="${EVENT_HOME}/results/schema_verbs.json"
 
