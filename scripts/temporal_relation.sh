@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # "protests" "election" "arrest"  "disease_outbreak" "plane_crash"
-for dir in "plane_crash"
+for dir in "disease_outbreak"
 do
 
   DIR="${EVENT_HOME}/results/${dir}"

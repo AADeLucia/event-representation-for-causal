@@ -20,8 +20,6 @@ from collections import Counter
 import re
 import json
 import nltk
-nltk.download('wordnet')
-from nltk.stem import WordNetLemmatizer
 
 from concrete.util import CommunicationReader
 from concrete.communication.ttypes import Communication
@@ -30,7 +28,7 @@ from typing import Dict, Iterable
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
-lemmatizer = WordNetLemmatizer()
+lemmatizer = nltk.stem.WordNetLemmatizer()
 
 
 def parse_args():
@@ -85,8 +83,8 @@ def get_temporal_relations(comm: Communication, key_verbs: Iterable = None):
         kind = sm.situationKind
         arg0 = spans_by_id.get(sm.argumentList[0].situationMentionId.uuidString)
         arg1 = spans_by_id.get(sm.argumentList[1].situationMentionId.uuidString)
-        arg0 = lemmatizer.lemmatize(arg0, pos="v")
-        arg1 = lemmatizer.lemmatize(arg1, pos="v")
+        # arg0 = lemmatizer.lemmatize(arg0, pos="v")
+        # arg1 = lemmatizer.lemmatize(arg1, pos="v")
         rel = (kind, arg0, arg1)
         # Skip contained/container
         if kind not in {"before", "after"}:
