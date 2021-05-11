@@ -1,5 +1,6 @@
 {
     "core_events": ["epidemic_start_1", "disease_spread_1", "disease_break_1"],
     "predpatt": ["spread", "infect", "diagnose", "vaccinate", "transmit", "cure", "treat", "evolve", "study", "test"],
+    "predpatt_wordnet": [["spread", "illness.n.01"], ["infect", "illness.n.01"], ["diagnose", "illness.n.01"], ["vaccinate"], ["transmit", "illness.n.01"], ["cure", "illness.n.01"], ["treat", "illness.n.01"], ["evolve", "illness.n.01"], ["study", "illness.n.01"], ["test", "illness.n.01"]],
     "framenet": []
 }

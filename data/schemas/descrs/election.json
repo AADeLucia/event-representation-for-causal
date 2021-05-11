@@ -1,5 +1,6 @@
 {
     "core_events": ["run_election_0", "voter_vote_1", "elect_candidate_0"],
     "predpatt": ["vote", "elect", "campaign", "nominate", "endorse", "defeat", "oust", "congratulate", "outnumber", "concede"],
+    "predpatt_wordnet": [["vote", "people.n.01"], ["elect", "civil_authority.n.01"], ["campaign", "campaigner.n.01"], ["nominate", "campaigner.n.01"], ["endorse", "campaigner.n.01"], ["defeat", "campaigner.n.01"], ["oust"], ["congratulate"], ["outnumber"], ["concede"]],
     "framenet": []
 }
